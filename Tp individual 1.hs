@@ -41,8 +41,11 @@ saqueoValioso (nom,valor)=valor>100
 saqueoEspecifico objeto (nom,valor)=objeto==nom
 saqueoComplejo objeto tesoro= saqueoValioso tesoro  || saqueoEspecifico  objeto tesoro
 saqueoAmoroso tesoro=False
-saquear formaSaqueo tesoro (nom, lista)= (nom, lista ++ filter (formaSaqueo)[tesoro])
+saquear formaSaqueo tesoro (nom, lista) = (nom, lista ++ filter (formaSaqueo) [tesoro] )
 
+saquear formaSaqueo tesoro pirata 
+  | formaSaqueo tesoro = adquirir tesoro pirata
+  | otherwise = pirata
 
 
 tripulantes(barco, saqueo,listaPiratas)=listaPiratas
@@ -51,10 +54,10 @@ tripulantes(barco, saqueo,listaPiratas)=listaPiratas
 nuevoPirata (nombre, saqueo, listaPiratas) pirata=(nombre, saqueo, listaPiratas ++ [pirata])
 sacarPirata (nombre, saqueo, listaPiratas) nom=(nombre, saqueo, filter((/=nom).fst))
 
-adquirirFrascoArena (nombre, lista)=(nombre, lista ++ [("Frasco de arena",1)])
-adquirirRon (nombre,lista) =(nombre, lista ++ [("Ron",25)])
+adquirir cosa (nombre, lista)=(nombre, cosa:lista)
+--adquirirRon (nombre,lista) =(nombre, lista ++ [("Ron",25)])
 
-anclarIslaDeshabitada (_,tesoro) (nombre, saqueo , listaPiratas)=(nombre,saqueo,  map(saquear saqueo tesoro)listaPiratas)
+anclarIslaDeshabitada (_,tesoro) (nombre, saqueo , listaPiratas)=(nombre,saqueo,  map (adquirir tesoro) listaPiratas)
 
 --ciudad=(ciudad, listaTesoros)
 
@@ -62,12 +65,12 @@ saqueoCiudad (nombre, formaSaqueo,listaPiratas) (ciudad, listaTesoros)= (nombre,
 
 cantidadPiratas (nombre, formaSaqueo, listaPiratas)= length listaPiratas
 
+primeraM b1 (nombre2, formaSaqueo2, listaPiratas2) =(length listaPiratas1)>(length listaPiratas2)
+primeraM (nombre1,formaSaqueo1,listaPiratas1) (nombre2, formaSaqueo2, listaPiratas2) =(length listaPiratas1)>(length listaPiratas2)
+--segundaM [(nombre1,formaSaqueo1,listaPiratas1),(nombre2, formaSaqueo2, listaPiratas2)]=(length listaPiratas1)<(length listaPiratas2)
+--empatadas [(nombre1,formaSaqueo1,listaPiratas1),(nombre2, formaSaqueo2, listaPiratas2)]=(length listaPiratas1)==(length listaPiratas2)
 
-primeraM [(nombre1,formaSaqueo1,listaPiratas1),(nombre2, formaSaqueo2, listaPiratas2)]=(length listaPiratas1)>(length listaPiratas2)
-segundaM [(nombre1,formaSaqueo1,listaPiratas1),(nombre2, formaSaqueo2, listaPiratas2)]=(length listaPiratas1)<(length listaPiratas2)
-empatadas [(nombre1,formaSaqueo1,listaPiratas1),(nombre2, formaSaqueo2, listaPiratas2)]=(length listaPiratas1)==(length listaPiratas2)
 
-
-embarcacionGanadora embarcacion1 embarcacion2 |primeraM [embarcacion1,embarcacion2]= embarcacion1
-                                              |segundaM [embarcacion1,embarcacion2]=embarcacion2
-                                              |empatadas [embarcacion1,embarcacion2]=("EMPATE",saqueoAmoroso,[])
+embarcacionGanadora embarcacion1 embarcacion2 |primeraM embarcacion1 embarcacion2 = embarcacion1
+                                              |primeraM embarcacion2 embarcacion1 = embarcacion2
+                                              |otherwise =("EMPATE",saqueoAmoroso,[])
